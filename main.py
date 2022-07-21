@@ -26,10 +26,15 @@ winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT,key)
 
 def Chrome():
     key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT,'Directory\\Background\\shell\\Chrome') 
-    
     winreg.SetValue(key, 'command', winreg.REG_SZ, 'C:\Program Files\Google\Chrome\Application\chrome.exe')
-
     winreg.SetValueEx(key, 'icon', 0, winreg.REG_SZ, 'C:\Program Files\Google\Chrome\Application\chrome.exe')
-    
     winreg.CloseKey(key)
 Chrome()
+
+def task_manager():
+    key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, 'Directory\\Background\\shell\\task_manager')
+    winreg.SetValue(key, 'command', winreg.REG_SZ, 'C:\Windows\system32\Taskmgr.exe')
+    winreg.SetValueEx(key, '', 0, winreg.REG_SZ, 'Task Manager')
+    winreg.SetValueEx(key, 'icon', 0, winreg.REG_SZ, 'C:\Windows\system32\Taskmgr.exe')
+    winreg.CloseKey(key)
+task_manager()
