@@ -1,35 +1,48 @@
 import winreg
 
-'''
-# basic way to add key in registry
-with winreg.ConnectRegistry(None, winreg.HKEY_CLASSES_ROOT) as hkey: #get the neceessary hkey
-    key =  winreg.CreateKey(hkey,'Directory\\Background\\shell\\new_test') 
-    winreg.CloseKey(key)
+# with winreg.ConnectRegistry(None, winreg.HKEY_CLASSES_ROOT) as hkey:
+#     key =  winreg.CreateKey(key,'Directory\\Background\\shell\\new_test') 
+#     winreg.CloseKey(key)
 
-# Add key in registry Using function
-def create_key():
-    key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT,'Directory\\Background\\shell\\Chrome\\command') 
-    winreg.SetValue(key, '', winreg.REG_SZ, 'C:\Program Files\Google\Chrome\Application\chrome.exe')
-    winreg.CloseKey(key)
-create_key()
+# def create_key():
+#     key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT,'Directory\\Background\\shell\\new_test\\command') 
+#     winreg.SetValue(key, '', winreg.REG_SZ, 'C:\Program Files\Google\Chrome\Application\chrome.exe')
+#     winreg.CloseKey(key)
+# create_key()
 
-# for adding icon 
-key = winreg.OpenKey(winreg.HKEY_CLASSES_ROOT,'Directory\\Background\\shell\\Chrome\\', 0, winreg.KEY_ALL_ACCESS)
-winreg.SetValueEx(key, 'icon', 0, winreg.REG_SZ, 'C:\Program Files\Google\Chrome\Application\chrome.exe')
-winreg.CloseKey(key)
+# begin
+print('''
+1) NETWORKING
+2) FILES :
+3) DEVELOPER :
+4) GENERAL :
+''')
 
-# Delete key
-key = 'Directory\\Background\\shell\\Chrome\\command'
-winreg.DeleteKey(winreg.HKEY_CLASSES_ROOT,key)
+fchoice = int(input("CHOOSE CATEGORY [NUMBER] : "))
 
-'''
-
-def Chrome():
-    key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT,'Directory\\Background\\shell\\Chrome') 
+content = {
+    1: '''
+1) COPY-IP tool
+    ''',
     
-    winreg.SetValue(key, 'command', winreg.REG_SZ, 'C:\Program Files\Google\Chrome\Application\chrome.exe')
+    2: '''
+1) Delete TMP (temp) files tool
+2) Show Hidden Files
+3) File - Permanently delete 
+4) File - Run/Open as Admin tool
+    ''',
 
-    winreg.SetValueEx(key, 'icon', 0, winreg.REG_SZ, 'C:\Program Files\Google\Chrome\Application\chrome.exe')
-    
-    winreg.CloseKey(key)
-Chrome()
+    3: '''
+1) Copy as Path
+    ''',
+
+    4: '''
+1) ScreenShot tool
+2) Browser (Chrome, Brave, Firefox)
+3) Task Manager
+4) Shutdown
+5) Restart
+    '''
+}
+print(content[fchoice])
+schoice = int(input("WHAT DO YOU WANNA ADD? [NUMBER} : "))
