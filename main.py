@@ -38,3 +38,11 @@ def task_manager():
     winreg.SetValueEx(key, 'icon', 0, winreg.REG_SZ, 'C:\Windows\system32\Taskmgr.exe')
     winreg.CloseKey(key)
 task_manager()
+
+def copy_as_path():
+    key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, '*\\shell\\copy_as_path')
+    winreg.SetValue(key, 'command', winreg.REG_SZ, 'cmd.exe /c echo “%1″|clip')
+    winreg.SetValueEx(key, '', 0, winreg.REG_SZ, 'Copy As Path')
+    winreg.CloseKey(key)
+
+copy_as_path()
