@@ -61,3 +61,26 @@ def delete_permanetly():
     winreg.CloseKey(key)
 # delete_permanetly()
 
+
+#https://www.winhelponline.com/blog/add-select-all-option-to-the-context-menu-in-windows-vista/
+def select_all():
+    key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, 'Directory\\Background\\shell\\Windows.selectall')
+
+    winreg.SetValue(key, 'command', winreg.REG_SZ, '')
+
+    key1 = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, 'Directory\\Background\\shell\\Windows.selectall\\command')
+    winreg.SetValueEx(key1, 'DelegateExecute', 0, winreg.REG_SZ, '{aa28fbc7-59f1-4c42-9fd8-ba2be27ea319}')
+    
+    winreg.SetValueEx(key, 'CanonicalName', 0, winreg.REG_SZ, '{b33bf5af-76d5-4d10-93e7-d8e22e93798f}')
+    winreg.SetValueEx(key, 'CommandStateHandler', 0, winreg.REG_SZ, '{3756e7f5-e514-4776-a32b-eb24bc1efe7a}')
+    winreg.SetValueEx(key, 'CommandStateSync', 0, winreg.REG_SZ, '')
+    winreg.SetValueEx(key, 'Description', 0, winreg.REG_SZ, '@shell32.dll,-31277')
+    winreg.SetValueEx(key,'Icon' ,0, winreg.REG_SZ, 'imageres.dll,-5308')
+    winreg.SetValueEx(key,'ImpliedSelectionModel' ,0, winreg.REG_DWORD, 32)
+    winreg.SetValueEx(key,'MUIVerb' ,0, winreg.REG_SZ, '@shell32.dll,-31276')
+    winreg.SetValueEx(key,'NeverDefault' ,0, winreg.REG_SZ, '')
+    winreg.SetValueEx(key,'Position' ,0, winreg.REG_SZ, 'Bottom')
+
+    winreg.CloseKey(key)
+    winreg.CloseKey(key1)
+select_all()
