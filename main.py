@@ -94,3 +94,24 @@ def shutdown():
     winreg.SetValueEx(key,'Position' ,0, winreg.REG_SZ, 'Bottom')
     winreg.CloseKey(key)
 shutdown()
+
+
+# https://superuser.com/questions/1151844/how-to-toggle-show-hide-hidden-files-in-windows-through-command-line
+def show_hidden_files_toggle():
+    key1 = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, 'Folder\\shell\\Windows.ShowHiddenFiles')
+    key2 = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, 'Directory\\Background\\shell\\Windows.ShowHiddenFiles')
+
+    winreg.SetValueEx(key1, 'CommandStateSync', 0, winreg.REG_SZ, '')
+    winreg.SetValueEx(key1, 'Description', 0, winreg.REG_SZ, '@shell32.dll,-37573')
+    winreg.SetValueEx(key1, 'ExplorerCommandHandler', 0, winreg.REG_SZ, '{f7300245-1f4b-41ba-8948-6fd392064494}')
+    winreg.SetValueEx(key1, 'MUIVerb', 0, winreg.REG_SZ, '@shell32.dll,-37572')
+
+    winreg.SetValueEx(key2, 'CommandStateSync', 0, winreg.REG_SZ, '')
+    winreg.SetValueEx(key2, 'Description', 0, winreg.REG_SZ, '@shell32.dll,-37573')
+    winreg.SetValueEx(key2, 'ExplorerCommandHandler', 0, winreg.REG_SZ, '{f7300245-1f4b-41ba-8948-6fd392064494}')
+    winreg.SetValueEx(key2, 'MUIVerb', 0, winreg.REG_SZ, '@shell32.dll,-37572')
+
+    winreg.CloseKey(key1)
+    winreg.CloseKey(key2)
+
+show_hidden_files_toggle()
