@@ -39,11 +39,15 @@ def task_manager():
     winreg.CloseKey(key)
 task_manager()
 
-#https://www.askvg.com/registry-tweak-to-add-copy-as-path-option-in-files-and-folders-context-menu-in-windows/
+#https://www.winhelponline.com/blog/copy-as-path-always-show-right-click-windows-10/
+
 def copy_as_path():
-    key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, '*\\shell\\copy_as_path')
-    winreg.SetValue(key, 'command', winreg.REG_SZ, 'cmd.exe /c echo “%1″|clip')
-    winreg.SetValueEx(key, '', 0, winreg.REG_SZ, 'Copy As Path')
+    key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, 'Allfilesystemobjects\\shell\\windows.copyaspath')
+    winreg.SetValueEx(key, '', 0, winreg.REG_SZ, 'Copy &as path')
+    winreg.SetValueEx(key, 'Icon', 0, winreg.REG_SZ, 'imageres.dll,-5302')
+    winreg.SetValueEx(key, 'InvokeCommandOnSelection', 0, winreg.REG_DWORD, 1)
+    winreg.SetValueEx(key, 'VerbHandler', 0, winreg.REG_SZ, '{f3d06e7c-1e45-4a26-847e-f9fcdee59be0}')
+    winreg.SetValueEx(key, 'VerbName', 0, winreg.REG_SZ, 'copyaspath')
     winreg.CloseKey(key)
 
 copy_as_path()
@@ -55,4 +59,5 @@ def delete_permanetly():
     winreg.SetValueEx(key, 'ExplorerCommandHandler', 0, winreg.REG_SZ, '{E9571AB2-AD92-4ec6-8924-4E5AD33790F5}')
     winreg.SetValueEx(key, 'Icon', 0, winreg.REG_SZ, 'shell32.dll,-240')
     winreg.CloseKey(key)
-delete_permanetly()
+# delete_permanetly()
+
