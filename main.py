@@ -84,3 +84,13 @@ def select_all():
     winreg.CloseKey(key)
     winreg.CloseKey(key1)
 select_all()
+
+
+# https://helpdeskgeek.com/how-to/add-shutdown-and-restart-to-the-right-click-context-menu-in-windows-8/
+def shutdown():
+    key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, 'Directory\\Background\\shell\\Shutdown')
+    winreg.SetValue(key, 'command', winreg.REG_SZ, 'shutdown -s -t 00 -f')
+    winreg.SetValueEx(key, 'Icon', 0, winreg.REG_SZ, 'shell32.dll,-221')
+    winreg.SetValueEx(key,'Position' ,0, winreg.REG_SZ, 'Bottom')
+    winreg.CloseKey(key)
+shutdown()
