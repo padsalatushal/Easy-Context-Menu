@@ -135,3 +135,18 @@ def snipping_tool():
 
 
 snipping_tool()
+
+
+def screenshot():
+    '''
+    src_path = os.getcwd()+'\ss.exe'
+    dst_path = r'C:\Windows\System32\ss.exe'
+    #move ss.exe from current folder to system32 folder
+    shutil.copy(src_path, dst_path)
+    '''
+    key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, 'Directory\\Background\\shell\\screenshot')
+    winreg.SetValueEx(key, '', 0, winreg.REG_SZ, 'Screenshot')
+    winreg.SetValue(key, 'command', winreg.REG_SZ, 'C:\Windows\System32\ss.exe' )
+    winreg.CloseKey(key)
+
+screenshot()
