@@ -124,3 +124,14 @@ def delete_tmp_file():
     winreg.CloseKey(key)
 
 delete_tmp_file()
+
+
+def snipping_tool():
+    key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, 'Directory\\Background\\shell\\snipping_tool')
+    winreg.SetValue(key, 'command', winreg.REG_SZ, 'C:\Windows\system32\SnippingTool.exe')
+    winreg.SetValueEx(key, '', 0, winreg.REG_SZ, 'Snipping Tool')
+    winreg.SetValueEx(key, 'Icon', 0, winreg.REG_SZ, 'C:\Windows\system32\SnippingTool.exe' )
+    winreg.CloseKey(key)
+
+
+snipping_tool()
