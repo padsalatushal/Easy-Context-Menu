@@ -115,3 +115,12 @@ def show_hidden_files_toggle():
     winreg.CloseKey(key2)
 
 show_hidden_files_toggle()
+
+
+def delete_tmp_file():
+    key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, 'Directory\\Background\\shell\\delete_tmp_file')
+    winreg.SetValueEx(key, '', 0, winreg.REG_SZ, 'Clean Temporary Files')
+    winreg.SetValue(key, 'command', winreg.REG_SZ, 'cmd.exe /C del /q/f/s %temp%\*') 
+    winreg.CloseKey(key)
+
+delete_tmp_file()
