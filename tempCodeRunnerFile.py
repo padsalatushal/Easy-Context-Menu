@@ -1,1 +1,0 @@
-    winreg.CloseKey(key)
