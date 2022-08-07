@@ -1,5 +1,5 @@
 import winreg
-
+import os,shutil
 '''
 # basic way to add key in registry
 with winreg.ConnectRegistry(None, winreg.HKEY_CLASSES_ROOT) as hkey: #get the neceessary hkey
@@ -59,7 +59,7 @@ def delete_permanetly():
     winreg.SetValueEx(key, 'ExplorerCommandHandler', 0, winreg.REG_SZ, '{E9571AB2-AD92-4ec6-8924-4E5AD33790F5}')
     winreg.SetValueEx(key, 'Icon', 0, winreg.REG_SZ, 'shell32.dll,-240')
     winreg.CloseKey(key)
-# delete_permanetly()
+delete_permanetly()
 
 
 #https://www.winhelponline.com/blog/add-select-all-option-to-the-context-menu-in-windows-vista/
@@ -136,21 +136,41 @@ def snipping_tool():
 
 snipping_tool()
 
-'''
+
 def screenshot():
-    src_path = os.getcwd()+'\ss.exe'
-    dst_path = r'C:\Windows\System32\ss.exe'
-    #move ss.exe from current folder to system32 folder
+    #move screenshot.exe from current folder to system32 folder
+    src_path = os.getcwd()+'\screenshot.exe'
+    dst_path = r'C:\Windows\System32\screenshot.exe'
     shutil.copy(src_path, dst_path)
 
+    # creating key for screenshot
     key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, 'Directory\\Background\\shell\\screenshot')
     winreg.SetValueEx(key, '', 0, winreg.REG_SZ, 'Screenshot')
-    winreg.SetValue(key, 'command', winreg.REG_SZ, 'C:\Windows\System32\ss.exe' )
+    winreg.SetValue(key, 'command', winreg.REG_SZ, 'C:\Windows\System32\screenshot.exe' )
     winreg.CloseKey(key)
 
-screenshot()
-'''
+    # making folder in desktop for saving screenshot
 
+    # For getting desktop path
+    Desktoppath = os.path.join((os.environ['USERPROFILE']),'Desktop')
+    sspath = os.path.join(Desktoppath,'Screenshot')
+    
+    if os.path.isdir(sspath) == True:
+        # print("ssfolder  exists")
+        pass
+    else:
+        os.mkdir(sspath)
+        # print("ssfolder created")
+
+    # changing defalut location for saving screenshot
+    # https://answers.microsoft.com/en-us/windows/forum/all/restore-screenshot-locations/1c410319-aacf-4c94-9d70-428b9a30d21d
+
+    key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, 'Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders', 0, winreg.KEY_ALL_ACCESS)
+    winreg.SetValueEx(key, '{374DE290-123F-4565-9164-39C4925E467B}', 0, winreg.REG_SZ, sspath)
+    winreg.CloseKey(key)
+
+
+screenshot()
 
 
 
@@ -198,3 +218,6 @@ for key in keys:
         except OSError as e:
             print(e)
 '''
+
+
+
