@@ -26,6 +26,7 @@ def task_manager():
     winreg.SetValueEx(key, 'icon', 0, winreg.REG_SZ, 'C:\Windows\system32\Taskmgr.exe')
     winreg.CloseKey(key)
 
+# https://www.winhelponline.com/blog/copy-as-path-always-show-right-click-windows-10/
 def copy_as_path():
     key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT,
                            'Allfilesystemobjects\\shell\\windows.copyaspath')
@@ -37,15 +38,58 @@ def copy_as_path():
     winreg.SetValueEx(key, 'VerbName', 0, winreg.REG_SZ, 'copyaspath')
     winreg.CloseKey(key)
 
+# https://www.winhelponline.com/blog/ribbon-command-right-click-menu-windows-10/
+def delete_permanetly():
+    key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT,
+                           'AllFileSystemObjects\\shell\\delete_permanetly')
+    winreg.SetValueEx(key, 'CommandStateSync', 0, winreg.REG_SZ, '')
+    winreg.SetValueEx(key, 'ExplorerCommandHandler', 0,
+                      winreg.REG_SZ, '{E9571AB2-AD92-4ec6-8924-4E5AD33790F5}')
+    winreg.SetValueEx(key, 'Icon', 0, winreg.REG_SZ, 'shell32.dll,-240')
+    winreg.CloseKey(key)
+
+
+
+# https://www.winhelponline.com/blog/add-select-all-option-to-the-context-menu-in-windows-vista/
+def select_all():
+    key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT,
+                           'Directory\\Background\\shell\\Windows.selectall')
+
+    winreg.SetValue(key, 'command', winreg.REG_SZ, '')
+
+    key1 = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT,
+                            'Directory\\Background\\shell\\Windows.selectall\\command')
+    winreg.SetValueEx(key1, 'DelegateExecute', 0, winreg.REG_SZ,
+                      '{aa28fbc7-59f1-4c42-9fd8-ba2be27ea319}')
+
+    winreg.SetValueEx(key, 'CanonicalName', 0, winreg.REG_SZ,
+                      '{b33bf5af-76d5-4d10-93e7-d8e22e93798f}')
+    winreg.SetValueEx(key, 'CommandStateHandler', 0,
+                      winreg.REG_SZ, '{3756e7f5-e514-4776-a32b-eb24bc1efe7a}')
+    winreg.SetValueEx(key, 'CommandStateSync', 0, winreg.REG_SZ, '')
+    winreg.SetValueEx(key, 'Description', 0,
+                      winreg.REG_SZ, '@shell32.dll,-31277')
+    winreg.SetValueEx(key, 'Icon', 0, winreg.REG_SZ, 'imageres.dll,-5308')
+    winreg.SetValueEx(key, 'ImpliedSelectionModel', 0, winreg.REG_DWORD, 32)
+    winreg.SetValueEx(key, 'MUIVerb', 0, winreg.REG_SZ, '@shell32.dll,-31276')
+    winreg.SetValueEx(key, 'NeverDefault', 0, winreg.REG_SZ, '')
+    winreg.SetValueEx(key, 'Position', 0, winreg.REG_SZ, 'Bottom')
+
+    winreg.CloseKey(key)
+    winreg.CloseKey(key1)
+
 chrome_check_var = IntVar()
 task_manager_check_var = IntVar()
 copy_as_path_check_var = IntVar()
-
+delete_permanetly_check_var = IntVar()
+select_all_check_var = IntVar()
 
 def var_state():
     print("chrome : ",chrome_check_var.get())
     print("Task Manager : ",task_manager_check_var.get())
     print("Copy As Path: ",copy_as_path_check_var.get())
+    print("Delete permanetly :", delete_permanetly_check_var.get())
+    print("Select All :", select_all_check_var.get())
 
 def apply():
     if chrome_check_var.get()==1:
@@ -54,10 +98,17 @@ def apply():
         task_manager()
     if copy_as_path_check_var.get()==1:
         copy_as_path()
+    if delete_permanetly_check_var.get()==1:
+        delete_permanetly()
+    if select_all_check_var.get()==1:
+        select_all()
 
-Checkbutton(root, text='Chrome', font='18', variable=chrome_check_var).grid(row=2, column=0)
-Checkbutton(root, text='Task Manager', font='18', variable=task_manager_check_var).grid(row=1, column=0)
+Checkbutton(root, text='Chrome', font='18', variable=chrome_check_var).grid(row=1, column=0)
+Checkbutton(root, text='Task Manager', font='18', variable=task_manager_check_var).grid(row=2, column=0)
 Checkbutton(root, text='Copy As Path', font='18', variable=copy_as_path_check_var).grid(row=3, column=0)
+Checkbutton(root, text='Delete Permanetly', font='18', variable=delete_permanetly_check_var).grid(row=1, column=1)
+Checkbutton(root, text='Select All', font='18', variable=select_all_check_var).grid(row=2, column=1)
+
 
 Button(root, text='show', command=var_state).grid(row=6, sticky=W, column=0)
 Button(root, text='Apply', command=apply).grid(row=6, sticky=W, column=1)
@@ -91,9 +142,12 @@ def delete_sub_key(key0, current_key):
 
 
 # List of keys to delete
-chrome_path = 'Directory\Background\shell\Chrome'
-task_manager_path = 'Directory\Background\shell\\task_manager'
-copy_as_path_path = 'Allfilesystemobjects\shell\windows.copyaspath'
+chrome_path = 'Directory\\Background\\shell\\Chrome'
+task_manager_path = 'Directory\\Background\\shell\\task_manager'
+copy_as_path_path = 'Allfilesystemobjects\\shell\\windows.copyaspath'
+delete_permanetly_path = 'AllFileSystemObjects\\shell\\delete_permanetly'
+select_all_path = 'Directory\\Background\\shell\\Windows.selectall'
+
 keys = []
 
 def delete_key():
@@ -110,6 +164,11 @@ def remove():
         keys.append(task_manager_path)    
     if copy_as_path_check_var.get()==1:
         keys.append(copy_as_path_path)
+    if delete_permanetly_check_var.get()==1:
+        keys.append(delete_permanetly_path)
+    if select_all_check_var.get()==1:
+        keys.append(select_all_path)
+    
     delete_key()
 
 
