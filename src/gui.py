@@ -3,11 +3,12 @@ import winreg
 
 root = Tk()
 
-root.geometry('500x400')
+
+root.geometry('550x400')
 root.minsize(400, 300)
 root.title('Easy Context Menu')
 
-Label(root, text='Easy Context Menu', font='comicsansms 29 bold').grid(row=0, column=2)
+Label(root, text='Easy Context Menu', font='comicsansms 29 bold').grid(row=0, column=1)
 
 def Chrome():
     key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT,
@@ -25,24 +26,41 @@ def task_manager():
     winreg.SetValueEx(key, 'icon', 0, winreg.REG_SZ, 'C:\Windows\system32\Taskmgr.exe')
     winreg.CloseKey(key)
 
+def copy_as_path():
+    key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT,
+                           'Allfilesystemobjects\\shell\\windows.copyaspath')
+    winreg.SetValueEx(key, '', 0, winreg.REG_SZ, 'Copy &as path')
+    winreg.SetValueEx(key, 'Icon', 0, winreg.REG_SZ, 'imageres.dll,-5302')
+    winreg.SetValueEx(key, 'InvokeCommandOnSelection', 0, winreg.REG_DWORD, 1)
+    winreg.SetValueEx(key, 'VerbHandler', 0, winreg.REG_SZ,
+                      '{f3d06e7c-1e45-4a26-847e-f9fcdee59be0}')
+    winreg.SetValueEx(key, 'VerbName', 0, winreg.REG_SZ, 'copyaspath')
+    winreg.CloseKey(key)
+
 chrome_check_var = IntVar()
 task_manager_check_var = IntVar()
+copy_as_path_check_var = IntVar()
+
 
 def var_state():
     print("chrome : ",chrome_check_var.get())
     print("Task Manager : ",task_manager_check_var.get())
+    print("Copy As Path: ",copy_as_path_check_var.get())
 
 def apply():
     if chrome_check_var.get()==1:
         Chrome()
     if task_manager_check_var.get()==1:
         task_manager()
+    if copy_as_path_check_var.get()==1:
+        copy_as_path()
 
-Checkbutton(root, text='Chrome', font='18', variable=chrome_check_var).grid(row=1, column=0)
-Checkbutton(root, text='Task Manager', font='18', variable=task_manager_check_var).grid(row=2, column=0)
+Checkbutton(root, text='Chrome', font='18', variable=chrome_check_var).grid(row=2, column=0)
+Checkbutton(root, text='Task Manager', font='18', variable=task_manager_check_var).grid(row=1, column=0)
+Checkbutton(root, text='Copy As Path', font='18', variable=copy_as_path_check_var).grid(row=3, column=0)
 
-Button(root, text='show', command=var_state).grid(row=2, sticky=W, column=2)
-Button(root, text='Apply', command=apply).grid(row=2, sticky=W, column=1)
+Button(root, text='show', command=var_state).grid(row=6, sticky=W, column=0)
+Button(root, text='Apply', command=apply).grid(row=6, sticky=W, column=1)
 
 
 def delete_sub_key(key0, current_key):
@@ -74,7 +92,8 @@ def delete_sub_key(key0, current_key):
 
 # List of keys to delete
 chrome_path = 'Directory\Background\shell\Chrome'
-task_manager_path = 'Directory\\Background\\shell\\task_manager'
+task_manager_path = 'Directory\Background\shell\\task_manager'
+copy_as_path_path = 'Allfilesystemobjects\shell\windows.copyaspath'
 keys = []
 
 def delete_key():
@@ -89,9 +108,12 @@ def remove():
         keys.append(chrome_path)
     if task_manager_check_var.get()==1:
         keys.append(task_manager_path)    
+    if copy_as_path_check_var.get()==1:
+        keys.append(copy_as_path_path)
     delete_key()
 
 
-Button(root, text='remove', command=remove).grid(row=3, sticky=W, column=2)
+
+Button(root, text='remove', command=remove).grid(row=6, sticky=W, column=2)
 
 root.mainloop()
