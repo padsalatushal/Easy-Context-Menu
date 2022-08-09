@@ -1,5 +1,6 @@
 from tkinter import *
-import winreg
+import winreg,os,shutil
+
 
 root = Tk()
 
@@ -126,6 +127,53 @@ def delete_tmp_file():
     winreg.CloseKey(key)
 
 
+def snipping_tool():
+    key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT,
+                           'Directory\\Background\\shell\\snipping_tool')
+    winreg.SetValue(key, 'command', winreg.REG_SZ,
+                    'C:\Windows\system32\SnippingTool.exe')
+    winreg.SetValueEx(key, '', 0, winreg.REG_SZ, 'Snipping Tool')
+    winreg.SetValueEx(key, 'Icon', 0, winreg.REG_SZ,
+                      'C:\Windows\system32\SnippingTool.exe')
+    winreg.CloseKey(key)
+
+
+def screenshot():
+    #move screenshot.exe from current folder to system32 folder
+    src_path = os.getcwd()+'\screenshot.exe'
+    dst_path = r'C:\Windows\System32\screenshot.exe'
+    shutil.copy(src_path, dst_path)
+
+    # creating key for screenshot
+    key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, 'Directory\\Background\\shell\\screenshot')
+    winreg.SetValueEx(key, '', 0, winreg.REG_SZ, 'Screenshot')
+    winreg.SetValue(key, 'command', winreg.REG_SZ, 'C:\Windows\System32\screenshot.exe' )
+    winreg.CloseKey(key)
+
+    # making folder in desktop for saving screenshot
+
+    # For getting desktop path
+    Desktoppath = os.path.join((os.environ['USERPROFILE']),'Desktop')
+    sspath = os.path.join(Desktoppath,'Screenshot')
+    
+    if os.path.isdir(sspath) == True:
+        # print("ssfolder  exists")
+        pass
+    else:
+        os.mkdir(sspath)
+        # print("ssfolder created")
+
+    # changing defalut location for saving screenshot
+    # https://answers.microsoft.com/en-us/windows/forum/all/restore-screenshot-locations/1c410319-aacf-4c94-9d70-428b9a30d21d
+
+    key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, 'Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders', 0, winreg.KEY_ALL_ACCESS)
+    winreg.SetValueEx(key, '{374DE290-123F-4565-9164-39C4925E467B}', 0, winreg.REG_SZ, sspath)
+    winreg.CloseKey(key)
+   
+    #restart explorer.exe
+    os.system('taskkill /F /IM explorer.exe & start explorer')
+
+
 
 
 chrome_check_var = IntVar()
@@ -136,6 +184,8 @@ select_all_check_var = IntVar()
 shutdown_check_var = IntVar()
 show_hidden_files_toggle_check_var = IntVar()
 delete_tmp_file_check_var = IntVar()
+snipping_tool_check_var = IntVar()
+screenshot_check_var = IntVar()
 
 
 def var_state():
@@ -147,6 +197,8 @@ def var_state():
     print("Shutdown :",shutdown_check_var.get())
     print("Show Hidden items toggle :", show_hidden_files_toggle_check_var.get())
     print("Delete tmp file:", delete_tmp_file_check_var.get())
+    print("Snipping tool :", snipping_tool_check_var.get())
+    print("Screenshot :", screenshot_check_var.get())
 
 def apply():
     if chrome_check_var.get()==1:
@@ -165,15 +217,24 @@ def apply():
         show_hidden_files_toggle()
     if delete_tmp_file_check_var.get()==1:
         delete_tmp_file()
+    if snipping_tool_check_var.get()==1:
+        snipping_tool()
+    if screenshot_check_var.get()==1:
+        screenshot()
 
 Checkbutton(root, text='Chrome', font='18', variable=chrome_check_var).grid(row=1, column=0)
 Checkbutton(root, text='Task Manager', font='18', variable=task_manager_check_var).grid(row=2, column=0)
 Checkbutton(root, text='Copy As Path', font='18', variable=copy_as_path_check_var).grid(row=3, column=0)
 Checkbutton(root, text='Delete Permanetly', font='18', variable=delete_permanetly_check_var).grid(row=1, column=1)
 Checkbutton(root, text='Select All', font='18', variable=select_all_check_var).grid(row=2, column=1)
-Checkbutton(root, text='Shutdown', font='18', variable=shutdown_check_var).grid(row=1, column=3)
-Checkbutton(root, text='Show hidden item toggle', font='18', variable=show_hidden_files_toggle_check_var).grid(row=2, column=3)
-Checkbutton(root, text='Delete Temporary files', font='18', variable=delete_tmp_file_check_var).grid(row=3, column=3)
+Checkbutton(root, text='Shutdown', font='18', variable=shutdown_check_var).grid(row=1, column=2)
+Checkbutton(root, text='Show hidden item toggle', font='18', variable=show_hidden_files_toggle_check_var).grid(row=2, column=2)
+Checkbutton(root, text='Delete Temporary files', font='18', variable=delete_tmp_file_check_var).grid(row=3, column=2)
+Checkbutton(root, text='Snipping tool', font='18', variable=snipping_tool_check_var).grid(row=4, column=0)
+Checkbutton(root, text='Screenshot', font='18', variable=screenshot_check_var).grid(row=5, column=0)
+
+
+
 
 Button(root, text='show', command=var_state).grid(row=6, sticky=W, column=0)
 Button(root, text='Apply', command=apply).grid(row=6, sticky=W, column=1)
@@ -216,6 +277,8 @@ shutdown_path = 'Directory\\Background\\shell\\Shutdown'
 show_hidden_files_toggle_path = 'Folder\\shell\\Windows.ShowHiddenFiles'
 show_hidden_files_toggle_path1 = 'Directory\\Background\\shell\\Windows.ShowHiddenFiles'
 delete_tmp_file_path = 'Directory\\Background\\shell\\delete_tmp_file'
+snipping_tool_path = 'Directory\\Background\\shell\\snipping_tool'
+screenshot_path = 'Directory\\Background\\shell\\screenshot'
 
 keys = []
 
@@ -244,7 +307,10 @@ def remove():
         keys.append(show_hidden_files_toggle_path1)
     if delete_tmp_file_check_var.get()==1:
         keys.append(delete_tmp_file_path)
-
+    if snipping_tool_check_var.get()==1:
+        keys.append(snipping_tool_path)
+    if screenshot_check_var.get()==1:
+        keys.append(screenshot_path)
 
 
     delete_key()
