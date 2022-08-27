@@ -201,6 +201,13 @@ def delete_sub_key(key0, current_key, arch_key=0):
     print("Removed %s" % current_key)
     return
 
+# to add/open google.com
+def google_com():
+    key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, "Directory\\Background\\shell\\google.com")
+    winreg.SetValue(key, 'command', winreg.REG_SZ, 'C:\Program Files\Google\Chrome\Application\chrome.exe  https://www.google.com/')
+    winreg.CloseKey(key)
+google_com()
+
 # Allows to specify if operating in redirected 32 bit mode or 64 bit, set arch_keys to 0 to disable
 arch_keys = [winreg.KEY_WOW64_32KEY, winreg.KEY_WOW64_64KEY]
 
