@@ -1,0 +1,15 @@
+﻿<Window x:Class="EasyContextMenu.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EasyContextMenu"
+        mc:Ignorable="d"
+        Background="#777777"
+		WindowStartupLocation="CenterScreen"
+        Title="Easy Context Menu" Height="400" Width="600">
+							<StackPanel Background="#777777" SnapsToDevicePixels="True" Grid.Column="0" Margin="10">
+							<Label Content="Options" FontSize="16" Margin="5,0"/>
+							<CheckBox Name="test" Content="test" Margin="5,0"/>
+						</StackPanel>
+</Window>

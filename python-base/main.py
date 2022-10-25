@@ -201,7 +201,6 @@ def delete_sub_key(key0, current_key, arch_key=0):
     print("Removed %s" % current_key)
     return
 
-
 # Allows to specify if operating in redirected 32 bit mode or 64 bit, set arch_keys to 0 to disable
 arch_keys = [winreg.KEY_WOW64_32KEY, winreg.KEY_WOW64_64KEY]
 
